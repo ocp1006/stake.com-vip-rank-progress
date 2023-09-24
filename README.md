@@ -2,7 +2,7 @@
 This extension provides users with insights into their VIP rank progress in Stake.com online casino.<br>
 It calculates the amount required for the next VIP rank and displays this information directly on the web page.
 
-![Screenshot of Extension](./screenshot/screenshot.jpg)
+![Screenshot of Extension](./screenshot/screenshot.png)
 
 ## Installation
 Easiest way to install is by visiting either the Chrome web store or Mozilla Addons and download the extension:
