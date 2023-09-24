@@ -35,7 +35,7 @@ Clone this repository: `git clone https://github.com/ocp1006/stake.com-vip-rank-
 
 ## Usage
 
-Navigate to Stake.com homepage. The extension will automatically calculate and display the required amounts on the page.
+Navigate to [Stake.com homepage](https://stake.com/). The extension will automatically calculate and display the required amounts on the page.
 
 ## Privacy
 > [!IMPORTANT]
