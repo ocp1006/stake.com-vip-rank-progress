@@ -1,0 +1,15 @@
+.amount-required-label {
+    margin-left: 10px;
+}
+
+.amount-spent-label {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+    text-shadow: 1px 1px 2px white;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 10px;
+    padding: 0 5px;
+}
