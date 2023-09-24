@@ -10,7 +10,7 @@ Easiest way to install is by visiting either the Chrome web store or Mozilla Add
 TBD
 
 ### Mozilla Addons
-TBD
+https://addons.mozilla.org/en-US/firefox/addon/stake-com-vip-rank-progress/
 
 ### Running locally
 Clone this repository: `git clone https://github.com/ocp1006/stake.com-vip-rank-progress.git`
