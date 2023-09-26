@@ -7,7 +7,7 @@ It calculates the amount required for the next VIP rank and displays this inform
 ## Installation
 Easiest way to install is by visiting either the Chrome web store or Mozilla Addons and download the extension:
 ### Chrome Web Store:
-TBD
+https://chrome.google.com/webstore/detail/stakecom-vip-rank-progres/bpjnkgolfbegakojhehihckcohgoamhn
 
 ### Mozilla Addons
 https://addons.mozilla.org/en-US/firefox/addon/stake-com-vip-rank-progress/
