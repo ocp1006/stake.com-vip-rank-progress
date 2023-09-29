@@ -18,7 +18,7 @@
 	"content_scripts": [
 		{
 			"matches": [
-				"https://stake.com/"
+				"https://stake.com/*"
 			],
 			"css": [
 				"css/styles.css"

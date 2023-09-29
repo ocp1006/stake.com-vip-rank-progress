@@ -7,7 +7,6 @@ window.applyStyles = function() {
     amountSpentLabel.style.left = '50%';
     amountSpentLabel.style.transform = 'translate(-50%, -50%)';
     amountSpentLabel.style.fontWeight = 'bold';
-    amountSpentLabel.style.textShadow = '1px 1px 2px white';
     amountSpentLabel.style.backgroundColor = 'rgba(255, 255, 255, 0.5)';
     amountSpentLabel.style.borderRadius = '5px';
     amountSpentLabel.style.padding = '0 5px';
