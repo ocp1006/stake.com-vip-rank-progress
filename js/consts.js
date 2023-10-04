@@ -23,5 +23,7 @@ const vipRanksArray = [
     {rank: "Diamond_III", value: 100_000_000, color: DIAMOND_COLOR},
     {rank: "Diamond_IV", value: 250_000_000, color: DIAMOND_COLOR},
     {rank: "Diamond_V", value: 500_000_000, color: DIAMOND_COLOR},
-    {rank: "Obsidian", value: 1_000_000_000, color: OBSIDIAN_COLOR}
+    {rank: "Obsidian_I", value: 1_000_000_000, color: OBSIDIAN_COLOR}
+    {rank: "Obsidian_II", value: 2_500_000_000, color: OBSIDIAN_COLOR}
+    {rank: "Obsidian_III", value: 5_000_000_000, color: OBSIDIAN_COLOR}
 ];
