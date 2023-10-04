@@ -4,6 +4,7 @@ SILVER_COLOR = "#b5cccc"
 GOLD_COLOR = "#f9d000"
 PLATINUM_COLOR = "#7fdde8"
 DIAMOND_COLOR = "#3386ff"
+OBSIDIAN_COLOR = "#7e1ed8"
 
 // Based on https://help.stake.com/en/articles/4793501-stake-vip-program-overview
 const vipRanksArray = [
@@ -22,5 +23,5 @@ const vipRanksArray = [
     {rank: "Diamond_III", value: 100_000_000, color: DIAMOND_COLOR},
     {rank: "Diamond_IV", value: 250_000_000, color: DIAMOND_COLOR},
     {rank: "Diamond_V", value: 500_000_000, color: DIAMOND_COLOR},
-    {rank: "Obsidian", value: 1_000_000_000, color: DEFAULT_COLOR}
+    {rank: "Obsidian", value: 1_000_000_000, color: OBSIDIAN_COLOR}
 ];
