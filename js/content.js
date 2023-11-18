@@ -8,10 +8,12 @@
 function groupElements(parent, count) {
     const elementsToGroup = [...parent.children].slice(-count);
     const wrapperDiv = document.createElement('div');
+
     elementsToGroup.forEach(node => wrapperDiv.appendChild(node));
     parent.appendChild(wrapperDiv);
     return wrapperDiv;
 }
+
 
 /**
  * Retrieves the current rank from the DOM.
@@ -77,7 +79,7 @@ function calculateAmountRequired() {
 // Observes changes in the body to detect the appearance of the progress bar and then calls `calculateAmountRequired`.
 const mutationObserver = new MutationObserver(() => {
     if (document.querySelector('.progress-heading')) {
-        calculateAmountRequired();
+		calculateAmountRequired();
         mutationObserver.disconnect();
     }
 });
