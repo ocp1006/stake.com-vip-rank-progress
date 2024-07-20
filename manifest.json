@@ -1,7 +1,7 @@
 {
 	"manifest_version": 3,
 	"name": "Stake.com VIP Rank Progress",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"description": "Calculates the amount required to reach the next VIP rank on Stake.com",
 	"icons": {
 		"16": "icons/icon-16.png",

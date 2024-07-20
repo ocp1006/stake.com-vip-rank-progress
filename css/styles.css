@@ -1,23 +1,35 @@
+/* Ensure the percentage label is displayed inline */
 .percent-label.svelte-h0vqv3 {
     display: inline !important;
 }
 
-.amount-required-label {
-    margin-left: 10px;
-	font-size: var(--text-size-base);
-	font-weight: 550;
+/* Prevent wrapping of the percentage and amount required text */
+span.variant-highlighted.numeric {
+    white-space: nowrap;
 }
 
+/* Style for the amount spent label inside the progress bar */
 .amount-spent-label {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 10;
-    text-shadow: 1px 1px 2px white;
-    background-color: rgba(255, 255, 255, 0.5);
+    background-color: rgba(15, 33, 46, 0.7);
+    color: white;
     border-radius: 10px;
-    padding: 0 5px;
-	font-size: var(--text-size-base);
-	font-weight: 550;
+    padding: 2px 5px;
+    font-size: var(--text-size-base);
+    font-weight: 550;
+}
+
+/* Ensure the progress bar has relative positioning and increased height */
+[data-melt-progress] {
+    position: relative;
+    height: 1em !important;
+}
+
+/* Adjust the inner div of the progress bar to match the new height */
+[data-melt-progress] > div {
+    height: 100% !important;
 }
