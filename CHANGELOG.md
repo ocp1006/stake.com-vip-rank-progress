@@ -7,3 +7,5 @@
 - Bug reports download as JSON and include extension version, page URL, active selectors, selector counts, VIP candidate elements, and recent diagnostic events with stack snippets.
 - Bug report generation now handles non-Stake tabs gracefully by downloading a small context report instead of freezing.
 - Removed temporary console debug output and manual debug helpers.
+- Added Firefox MV3 add-on metadata and no-data-collection declaration for AMO validation.
+- Replaced dynamic `innerHTML` injection with DOM node construction.

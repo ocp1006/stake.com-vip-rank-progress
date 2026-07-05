@@ -20,6 +20,16 @@
 			"128": "icons/icon-128.png"
 		}
 	},
+	"browser_specific_settings": {
+		"gecko": {
+			"id": "addon@svrp.com",
+			"data_collection_permissions": {
+				"required": [
+					"none"
+				]
+			}
+		}
+	},
 	"content_scripts": [
 		{
 			"matches": [
