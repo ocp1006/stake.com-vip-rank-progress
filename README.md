@@ -39,10 +39,15 @@ Clone this repository: `git clone https://github.com/ocp1006/stake.com-vip-rank-
 
 Navigate to [Stake.com homepage](https://stake.com/). The extension will automatically calculate and display the required amounts on the page.
 
+## Bug Reports
+
+If the extension stops working, click the extension icon and select **Generate bug report**. A JSON report will be downloaded by your browser. Attach that file when opening an issue so the current Stake page structure can be diagnosed quickly.
+
 ## Privacy
 > [!IMPORTANT]
 > Your privacy is important. All calculations are done directly in the browser.<br>
 > No data is collected, stored, or sent to any external servers.
+> Bug reports are generated locally as downloaded JSON files and are only shared if you choose to attach them to an issue.
 
 ## Contributing
 
@@ -54,4 +59,4 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 
 ## Disclaimer
 
-This extension is not affiliated, associated, authorized, endorsed by, or in any way officially connected with Stake.com, its webside or any of its subsidiaries or its affiliates. The official Stake website can be found at its respective domain. The name as well as related names, marks, emblems, and images are registered trademarks of their respective owners.
+This extension is not affiliated, associated, authorized, endorsed by, or in any way officially connected with Stake.com, its website or any of its subsidiaries or its affiliates. The official Stake website can be found at its respective domain. The name as well as related names, marks, emblems, and images are registered trademarks of their respective owners.
