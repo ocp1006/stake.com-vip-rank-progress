@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.1 - 2026-09-26
+
+- Fixed VIP progress detection after Stake moved the homepage VIP card away from `current-vip-level-*` wrappers.
+- Added support for the new `homepage-your-vip-progress` card structure and nearby rank labels such as `Platinum II` / `Platinum III`.
+- Kept the legacy selector path for older Stake layouts.
+
 ## 1.1.0 - 2026-07-05
 
 - Fixed VIP progress detection after Stake changed the progress bar markup from `data-melt-progress` to `role="progressbar"` / `data-progress-root` inside `current-vip-level-*` cards.

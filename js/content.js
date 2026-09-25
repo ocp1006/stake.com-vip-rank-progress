@@ -1,18 +1,21 @@
 const DIAGNOSTIC_SCAN_EVENT_INTERVAL_MS = 15000;
 const DIAGNOSTIC_NO_PROGRESS_EVENT_INTERVAL_MS = 30000;
 const MUTATION_DEBOUNCE_MS = 250;
-const VIP_WIDGET_SELECTOR = '[data-testid^="current-vip-level-"]';
+const LEGACY_VIP_WIDGET_SELECTOR = '[data-testid^="current-vip-level-"]';
+const HOMEPAGE_VIP_TRIGGER_SELECTOR = '[data-testid="homepage-your-vip-progress"], [data-analytics="homepage-your-vip-progress"]';
+const VIP_PROGRESS_SELECTOR = '[data-melt-progress], [data-progress-root], [role="progressbar"], [aria-valuenow][aria-valuemax]';
 const PROGRESS_SELECTORS = [
-    `${VIP_WIDGET_SELECTOR} [data-melt-progress]`,
-    `${VIP_WIDGET_SELECTOR} [data-progress-root]`,
-    `${VIP_WIDGET_SELECTOR} [role="progressbar"]`,
-    `${VIP_WIDGET_SELECTOR} [aria-valuenow][aria-valuemax]`
+    `${LEGACY_VIP_WIDGET_SELECTOR} [data-melt-progress]`,
+    `${LEGACY_VIP_WIDGET_SELECTOR} [data-progress-root]`,
+    `${LEGACY_VIP_WIDGET_SELECTOR} [role="progressbar"]`,
+    `${LEGACY_VIP_WIDGET_SELECTOR} [aria-valuenow][aria-valuemax]`
 ];
 const DIAGNOSTIC_CANDIDATE_SELECTOR = [
-    VIP_WIDGET_SELECTOR,
+    LEGACY_VIP_WIDGET_SELECTOR,
+    HOMEPAGE_VIP_TRIGGER_SELECTOR,
     ...PROGRESS_SELECTORS,
-    `${VIP_WIDGET_SELECTOR} [data-testid*="level" i]`,
-    `${VIP_WIDGET_SELECTOR} [data-ds-text="true"]`
+    `${LEGACY_VIP_WIDGET_SELECTOR} [data-testid*="level" i]`,
+    `${LEGACY_VIP_WIDGET_SELECTOR} [data-ds-text="true"]`
 ].join(', ');
 
 let lastScanEventAt = 0;
@@ -91,8 +94,56 @@ function queryAllSafe(root, selector) {
     }
 }
 
+function extractKnownRankNames(root) {
+    const ranks = getVipRanksArray();
+    if (!root || !Array.isArray(ranks)) return [];
+
+    const knownRanks = new Set(ranks.map(rank => rank.rank));
+    const seenRanks = new Set();
+
+    return findTextCandidates(root)
+        .map(candidate => normalizeRankName(candidate.textContent ?? ''))
+        .filter(rankName => {
+            if (!knownRanks.has(rankName) || seenRanks.has(rankName)) return false;
+            seenRanks.add(rankName);
+            return true;
+        });
+}
+
+function findHomepageVipWidgetRootFromTrigger(triggerElement) {
+    const cardRoot = triggerElement.closest('.card');
+    if (cardRoot?.querySelector(VIP_PROGRESS_SELECTOR)) return cardRoot;
+
+    let current = triggerElement.parentElement;
+    let depth = 0;
+
+    while (current && current !== document.body && depth < 8) {
+        if (current.querySelector(VIP_PROGRESS_SELECTOR)) return current;
+        current = current.parentElement;
+        depth += 1;
+    }
+
+    return null;
+}
+
+function findHomepageVipWidgetRoots() {
+    return uniqueElements(
+        queryAllSafe(document, HOMEPAGE_VIP_TRIGGER_SELECTOR)
+            .map(findHomepageVipWidgetRootFromTrigger)
+            .filter(Boolean)
+    );
+}
+
+function findHomepageVipWidgetRootForElement(element) {
+    return findHomepageVipWidgetRoots().find(widgetRoot => widgetRoot.contains(element)) ?? null;
+}
+
 function findProgressElements() {
-    return uniqueElements(PROGRESS_SELECTORS.flatMap(selector => queryAllSafe(document, selector)));
+    const legacyProgressElements = PROGRESS_SELECTORS.flatMap(selector => queryAllSafe(document, selector));
+    const homepageProgressElements = findHomepageVipWidgetRoots()
+        .flatMap(widgetRoot => queryAllSafe(widgetRoot, VIP_PROGRESS_SELECTOR));
+
+    return uniqueElements([...legacyProgressElements, ...homepageProgressElements]);
 }
 
 function findTextCandidates(root) {
@@ -113,8 +164,11 @@ function looksLikeVipWidget(element) {
 }
 
 function getWidgetRoot(progressElement) {
-    const vipWidget = progressElement.closest(VIP_WIDGET_SELECTOR);
-    if (vipWidget) return vipWidget;
+    const legacyVipWidget = progressElement.closest(LEGACY_VIP_WIDGET_SELECTOR);
+    if (legacyVipWidget) return legacyVipWidget;
+
+    const homepageVipWidget = findHomepageVipWidgetRootForElement(progressElement);
+    if (homepageVipWidget) return homepageVipWidget;
 
     let current = progressElement.parentElement;
     let fallback = progressElement.parentElement;
@@ -142,13 +196,13 @@ if (!Array.isArray(getVipRanksArray())) {
 /**
  * Determines the current VIP rank from a progress bar element.
  * Tries the data-testid ancestor first, then falls back to deriving it
- * from the sibling "Next level:" text.
+ * from nearby rank labels.
  * @param {HTMLElement} progressElement
  * @returns {string|null}
  */
 function getRankForWidget(progressElement) {
     const ranks = getVipRanksArray();
-    const testidEl = progressElement.closest('[data-testid^="current-vip-level-"]');
+    const testidEl = progressElement.closest(LEGACY_VIP_WIDGET_SELECTOR);
     if (testidEl) {
         const dataTestId = testidEl.getAttribute('data-testid');
         const rank = normalizeRankName(dataTestId?.replace('current-vip-level-', ''));
@@ -183,6 +237,34 @@ function getRankForWidget(progressElement) {
             nextLevelText: nextLevelSpan.textContent,
             knownRanks: ranks.map(r => r.rank)
         });
+    }
+
+    const rankLabels = extractKnownRankNames(widgetRoot ?? progressElement.parentElement);
+    for (let index = 0; index < rankLabels.length - 1; index += 1) {
+        const rank = rankLabels[index];
+        const nextRank = rankLabels[index + 1];
+        const rankIndex = ranks.findIndex(r => r.rank === rank);
+        const nextRankIndex = ranks.findIndex(r => r.rank === nextRank);
+
+        if (rankIndex >= 0 && nextRankIndex === rankIndex + 1) {
+            recordDiagnostic('log', 'rank-derived-from-adjacent-rank-labels', {
+                rank,
+                nextRank,
+                rankLabels,
+                widgetRoot: summarizeElement(widgetRoot)
+            });
+            return rank;
+        }
+    }
+
+    if (rankLabels.length > 0) {
+        const rank = rankLabels[0];
+        recordDiagnostic('log', 'rank-derived-from-rank-label', {
+            rank,
+            rankLabels,
+            widgetRoot: summarizeElement(widgetRoot)
+        });
+        return rank;
     }
 
     recordDiagnostic('warn', 'rank-detection-failed', {
@@ -225,7 +307,7 @@ function extractPercentageElement(progressElement) {
 
 /**
  * Injects the amount-required label and amount-wagered label into a single VIP widget.
- * @param {HTMLElement} progressElement - A [data-melt-progress] element.
+ * @param {HTMLElement} progressElement - A VIP progress element.
  */
 function injectIntoWidget(progressElement) {
     const ranks = getVipRanksArray();
@@ -295,6 +377,14 @@ function injectIntoWidget(progressElement) {
 function getDebugSnapshot() {
     const progressElements = findProgressElements();
     const vipCandidates = uniqueElements(queryAllSafe(document, DIAGNOSTIC_CANDIDATE_SELECTOR));
+    const selectorCounts = [
+        ...PROGRESS_SELECTORS,
+        HOMEPAGE_VIP_TRIGGER_SELECTOR,
+        VIP_PROGRESS_SELECTOR
+    ].map(selector => ({
+        selector,
+        count: queryAllSafe(document, selector).length
+    }));
     const manifest = getExtensionManifest();
 
     return {
@@ -315,14 +405,13 @@ function getDebugSnapshot() {
         bodyExists: Boolean(document.body),
         scanCount,
         selectors: {
-            vipWidget: VIP_WIDGET_SELECTOR,
+            legacyVipWidget: LEGACY_VIP_WIDGET_SELECTOR,
+            homepageVipTrigger: HOMEPAGE_VIP_TRIGGER_SELECTOR,
             progress: PROGRESS_SELECTORS,
+            vipProgress: VIP_PROGRESS_SELECTOR,
             candidates: DIAGNOSTIC_CANDIDATE_SELECTOR
         },
-        selectorCounts: PROGRESS_SELECTORS.map(selector => ({
-            selector,
-            count: queryAllSafe(document, selector).length
-        })),
+        selectorCounts,
         progressCount: progressElements.length,
         progressElements: progressElements.slice(0, 20).map(summarizeElement),
         vipCandidates: vipCandidates.slice(0, 40).map(summarizeElement),
