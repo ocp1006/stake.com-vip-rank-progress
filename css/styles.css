@@ -1,19 +1,15 @@
-/* Prevent wrapping of the percentage and amount required text */
-.ds-body-sm-strong[data-ds-text="true"] {
+/* Keep the percentage compact on the right side of the VIP card. */
+.ds-body-sm-strong[data-ds-text="true"],
+.edge-typography-body-sm-strong[data-ds-text="true"] {
     white-space: nowrap;
 }
 
-/* Amount required inline label — slightly smaller than the percentage */
-.amount-required-label {
-    font-size: 0.8em;
-    font-weight: 500;
-    opacity: 0.9;
-}
-
-/* Amount wagered row — sits below the progress bar, styled like the "Next level" text */
+/* Combined wagered/needed row below the progress bar. */
 .amount-spent-label {
+    display: block;
     font-size: 0.75rem;
     font-weight: 600;
     line-height: 1.4;
     letter-spacing: 0.01em;
+    white-space: nowrap;
 }

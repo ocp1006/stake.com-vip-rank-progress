@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.2 - 2026-09-26
+
+- Moved the full wagered/needed sentence below the progress bar on the left and kept the percentage clean on the right.
+
 ## 1.1.1 - 2026-09-26
 
 - Fixed VIP progress detection after Stake moved the homepage VIP card away from `current-vip-level-*` wrappers.

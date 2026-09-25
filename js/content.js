@@ -348,16 +348,10 @@ function injectIntoWidget(progressElement) {
     const amountRequired = Math.round((nextRankObj.value - currentRankObj.value) * (100 - currentPercentage) / 100);
     const amountSpent = nextRankObj.value - amountRequired;
 
-    const amountRequiredLabel = document.createElement('span');
-    amountRequiredLabel.textContent = `($${amountRequired.toLocaleString("en-US")} needed)`;
-    amountRequiredLabel.classList.add("amount-required-label");
-    amountRequiredLabel.style.color = currentRankObj.color;
-
-    percentageElement.textContent = `${currentPercentage.toFixed(2)}% `;
-    percentageElement.append(amountRequiredLabel);
+    percentageElement.textContent = `${currentPercentage.toFixed(2)}%`;
 
     const amountSpentLabel = document.createElement('span');
-    amountSpentLabel.textContent = `$${amountSpent.toLocaleString("en-US")} wagered`;
+    amountSpentLabel.textContent = `$${amountSpent.toLocaleString("en-US")} wagered ($${amountRequired.toLocaleString("en-US")} needed)`;
     amountSpentLabel.classList.add("amount-spent-label");
     amountSpentLabel.style.color = currentRankObj.color;
     progressElement.insertAdjacentElement('afterend', amountSpentLabel);
